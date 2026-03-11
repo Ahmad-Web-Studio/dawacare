@@ -1,32 +1,60 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Swiper from "swiper";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
+import { db } from "../firebase/firebase";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+
+// ✅ Import Cart Context
+import { useCart } from "../contexts/CartContext";
+
+// ✅ Font Awesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+
 function Productslider() {
   const swiperRef = useRef(null);
   const swiperInstance = useRef(null);
+  const [products, setProducts] = useState([]);
 
+  // ✅ Get addToCart from context
+  const { addToCart } = useCart();
+
+  // Fetch products
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+      const snapshot = await getDocs(q);
+
+      const productList = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      setProducts(productList);
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Swiper
   useEffect(() => {
     if (swiperRef.current) {
       swiperInstance.current = new Swiper(swiperRef.current, {
         modules: [Autoplay, Pagination],
-
         slidesPerView: 3,
         spaceBetween: 30,
         loop: true,
-
         autoplay: {
           delay: 2500,
           disableOnInteraction: false,
         },
-
         pagination: {
           el: ".product-pagination",
           clickable: true,
         },
-
         breakpoints: {
           0: { slidesPerView: 2 },
           768: { slidesPerView: 3 },
@@ -40,12 +68,11 @@ function Productslider() {
         swiperInstance.current.destroy(true, true);
       }
     };
-  }, []);
+  }, [products]);
 
   return (
     <div className="product-section">
-      
-      {/* HEADER OUTSIDE SWIPER */}
+      {/* HEADER */}
       <div className="deals-header">
         <h2 className="deals-title">
           Today Best Deal <br />
@@ -59,164 +86,40 @@ function Productslider() {
       {/* SWIPER */}
       <div className="swiper product-swiper" ref={swiperRef}>
         <div className="swiper-wrapper">
+          {products.map((product) => (
+            <div className="swiper-slide shrink-slide" key={product.id}>
+              <div className="product-card">
+                <div className="card-image-box">
+                  <span className="discount-badge">{product.discount}</span>
+                  <img src={product.productImage} alt={product.productName} />
 
-          {/* Slide 1 */}
-          <div className="swiper-slide shrink-slide">
-          <div className="product-card">
-            <div className="card-image-box">
-              <span className="discount-badge">20%</span>
-              <img src="./assets/Images/glutamax.png" alt="Glutamax" />
-            </div>
-            <div className="card-info">
-              <div className="rating">★ ★ ★ ★</div>
-              <h4 className="product-name">Arinac Forte (400/60mg) 100</h4>
-              <p className="brand-name">Tablets</p>
-              <div className="price-container">
-                <span className="new-price">Rs. 500.0</span>
-                <span className="old-price">Rs. 1500.0</span>
+                  {/* ✅ Add to cart icon button */}
+                  <button
+                    className="add-cart-btn"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      addToCart(product);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faCartShopping} />
+                  </button>
+                </div>
+
+                <div className="card-info">
+                  <div className="rating">★ ★ ★ ★</div>
+                  <h4 className="product-name">{product.productName}</h4>
+                  <p className="brand-name">{product.brandName}</p>
+
+                  <div className="price-container">
+                    <span className="new-price">Rs. {product.newPrice}</span>
+                    <span className="old-price">Rs. {product.oldPrice}</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          </div>
-
-          {/* Slide 2 */}
-          <div className="swiper-slide shrink-slide">
-          <div className="product-card">
-            <div className="card-image-box">
-              <span className="discount-badge">20%</span>
-              <img src="./assets/Images/surbex.png" alt="Glutamax" />
-            </div>
-            <div className="card-info">
-              <div className="rating">★ ★ ★ ★</div>
-              <h4 className="product-name">Arinac Forte (400/60mg) 100</h4>
-              <p className="brand-name">Tablets</p>
-              <div className="price-container">
-                <span className="new-price">Rs. 500.0</span>
-                <span className="old-price">Rs. 1500.0</span>
-              </div>
-            </div>
-          </div>
-          </div>
-
-          {/* Slide 3 */}
-          <div className="swiper-slide shrink-slide">
-          <div className="product-card">
-            <div className="card-image-box">
-              <span className="discount-badge">20%</span>
-              <img src="./assets/Images/glutamax.png" alt="Glutamax" />
-            </div>
-            <div className="card-info">
-              <div className="rating">★ ★ ★ ★</div>
-              <h4 className="product-name">Arinac Forte (400/60mg) 100</h4>
-              <p className="brand-name">Tablets</p>
-              <div className="price-container">
-                <span className="new-price">Rs. 500.0</span>
-                <span className="old-price">Rs. 1500.0</span>
-              </div>
-            </div>
-          </div>
-          </div>
-
-          {/* Slide 4 */}
-          <div className="swiper-slide shrink-slide">
-          <div className="product-card">
-            <div className="card-image-box">
-              <span className="discount-badge">20%</span>
-              <img src="./assets/Images/surbex.png" alt="Glutamax" />
-            </div>
-            <div className="card-info">
-              <div className="rating">★ ★ ★ ★</div>
-              <h4 className="product-name">Arinac Forte (400/60mg) 100</h4>
-              <p className="brand-name">Tablets</p>
-              <div className="price-container">
-                <span className="new-price">Rs. 500.0</span>
-                <span className="old-price">Rs. 1500.0</span>
-              </div>
-            </div>
-          </div>
-          </div>
-
-
-                 {/* Slide 1 */}
-                 <div className="swiper-slide shrink-slide">
-                 <div className="product-card">
-            <div className="card-image-box">
-              <span className="discount-badge">20%</span>
-              <img src="./assets/Images/freestyle.png" alt="Glutamax" />
-            </div>
-            <div className="card-info">
-              <div className="rating">★ ★ ★ ★</div>
-              <h4 className="product-name">Arinac Forte (400/60mg) 100</h4>
-              <p className="brand-name">Tablets</p>
-              <div className="price-container">
-                <span className="new-price">Rs. 500.0</span>
-                <span className="old-price">Rs. 1500.0</span>
-              </div>
-            </div>
-          </div>
-          </div>
-
-          {/* Slide 2 */}
-          <div className="swiper-slide shrink-slide">
-          <div className="product-card">
-            <div className="card-image-box">
-              <span className="discount-badge">20%</span>
-              <img src="./assets/Images/glutamax.png" alt="Glutamax" />
-            </div>
-            <div className="card-info">
-              <div className="rating">★ ★ ★ ★</div>
-              <h4 className="product-name">Arinac Forte (400/60mg) 100</h4>
-              <p className="brand-name">Tablets</p>
-              <div className="price-container">
-                <span className="new-price">Rs. 500.0</span>
-                <span className="old-price">Rs. 1500.0</span>
-              </div>
-            </div>
-          </div>
-          </div>
-
-          {/* Slide 3 */}
-          <div className="swiper-slide shrink-slide">
-          <div className="product-card">
-            <div className="card-image-box">
-              <span className="discount-badge">20%</span>
-              <img src="./assets/Images/surbex.png" alt="Glutamax" />
-            </div>
-            <div className="card-info">
-              <div className="rating">★ ★ ★ ★</div>
-              <h4 className="product-name">Arinac Forte (400/60mg) 100</h4>
-              <p className="brand-name">Tablets</p>
-              <div className="price-container">
-                <span className="new-price">Rs. 500.0</span>
-                <span className="old-price">Rs. 1500.0</span>
-              </div>
-            </div>
-          </div>
-          </div>
-
-          {/* Slide 4 */}
-          <div className="swiper-slide shrink-slide">
-          <div className="product-card">
-            <div className="card-image-box">
-              <span className="discount-badge">20%</span>
-              <img src="./assets/Images/freestyle.png" alt="Glutamax" />
-            </div>
-            <div className="card-info">
-              <div className="rating">★ ★ ★ ★</div>
-              <h4 className="product-name">Arinac Forte (400/60mg) 100</h4>
-              <p className="brand-name">Tablets</p>
-              <div className="price-container">
-                <span className="new-price">Rs. 500.0</span>
-                <span className="old-price">Rs. 1500.0</span>
-              </div>
-            </div>
-          </div>
-          </div>
-
-          {/* Add more slides if needed */}
+          ))}
         </div>
 
-        {/* Pagination */}
       </div>
     </div>
   );

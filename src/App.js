@@ -8,17 +8,19 @@ import About from "./Pages/About";
 import Products from "./Pages/Products";
 import ProductDetailedView from "./Pages/ProductDetailedView";
 import CheckoutPage from "./Pages/CheckoutPage";
+import Login from "./Pages/Login";
+import ProtectedRoute from "./Components/ProtectedRoute";
 
-// Admin panel pages
+// Admin panel
 import Dashboard from "./AdminPanel/Dashoard";
 
-// Popup cart
+// Cart
 import Cart from "./Components/Cart";
 
 function App() {
   return (
     <div className="App">
-      {/* Toast notifications */}
+
       <ToastContainer
         position="top-right"
         autoClose={4000}
@@ -27,56 +29,79 @@ function App() {
         theme="colored"
       />
 
-      {/* Always mount Cart popup */}
-      <Cart />
-
-      {/* Routes for pages */}
       <Routes>
+
         <Route
           path="/"
           element={
             <div className="website-layout">
+              <Cart />
               <Home />
             </div>
           }
         />
+
         <Route
           path="/about"
           element={
             <div className="website-layout">
+              <Cart />
               <About />
             </div>
           }
         />
+
         <Route
           path="/products"
           element={
             <div className="website-layout">
+              <Cart />
               <Products />
             </div>
           }
         />
-        {/* Removed /cart route */}
-        {/* <Route path="/cart" element={<div className="website-layout"><Cart /></div>} /> */}
-        <Route path="/admin/*" element={<Dashboard />} />
+
         <Route
           path="/product/:id"
           element={
             <div className="website-layout">
+              <Cart />
               <ProductDetailedView />
             </div>
           }
-        />{" "}
-        {/* New checkout route */}
+        />
+
         <Route
           path="/checkout"
           element={
             <div className="website-layout">
-            <CheckoutPage />
-          </div>
+              <Cart />
+              <CheckoutPage />
+            </div>
           }
         />
+
+        <Route
+          path="/login"
+          element={
+            <div className="website-layout">
+              <Login />
+            </div>
+          }
+        />
+
+        {/* Protected Admin Route */}
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
+
     </div>
   );
 }

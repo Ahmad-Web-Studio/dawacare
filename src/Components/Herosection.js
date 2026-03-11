@@ -121,7 +121,7 @@ function HeroSection() {
                 <path fill="currentColor" d="M19 13H6.75L12 18.25l-.66.75l-6.5-6.5l6.5-6.5l.66.75L6.75 12H19z"/>
             </svg>
         </div>
-        <div className="swiper-pagination"></div>
+        {/* <div className="swiper-pagination"></div> */}
 
       </div>
     </section>
