@@ -1,12 +1,14 @@
 // src/AdminPanel/BusinessInfo.js
 import React, { useState, useEffect } from "react";
 import { useSiteInfo, DEFAULT_SITE_INFO } from "../contexts/SiteInfoContext";
+import { useSale } from "../contexts/SaleContext";
 import { toast } from "react-toastify";
 
-const SLIDE_LABELS = ["Slide 1", "Slide 2", "Slide 3"];
+const SLIDE_LABELS = ["Hero Section Slide 1", "Hero Section Slide 2", "Hero Section Slide 3"];
 
 function BusinessInfo() {
   const { siteInfo, loading, saveSiteInfo } = useSiteInfo();
+  const { sale, discountLabel } = useSale();
 
   const [logoURL, setLogoURL] = useState(DEFAULT_SITE_INFO.logoURL);
   const [footerLogoURL, setFooterLogoURL] = useState(DEFAULT_SITE_INFO.footerLogoURL);
@@ -172,66 +174,79 @@ function BusinessInfo() {
 
             <div className="upload-form" style={{ display: "grid", gap: "12px" }}>
               <div className="form-group">
-                <label>Tagline (small top text)</label>
+                <label>Hero Section Tagline (small top text above heading)</label>
                 <input
                   type="text"
-                  value={slide.tagline}
-                  onChange={(e) => updateSlide(index, "tagline", e.target.value)}
+                  value={slide.heroTagline}
+                  onChange={(e) => updateSlide(index, "heroTagline", e.target.value)}
                   placeholder="e.g. HealthCare sa mily Gi"
                 />
               </div>
 
               <div className="form-group">
-                <label>Main Heading</label>
+                <label>Hero Section Title (main heading)</label>
                 <input
                   type="text"
-                  value={slide.title}
-                  onChange={(e) => updateSlide(index, "title", e.target.value)}
+                  value={slide.heroTitle}
+                  onChange={(e) => updateSlide(index, "heroTitle", e.target.value)}
                   placeholder="e.g. 100% Genuine Dwaai"
                 />
               </div>
 
               <div className="form-group">
-                <label>Heading Highlight (large span)</label>
+                <label>Hero Section Title Highlight (large bold span)</label>
                 <input
                   type="text"
-                  value={slide.bigSpan}
-                  onChange={(e) => updateSlide(index, "bigSpan", e.target.value)}
+                  value={slide.heroTitleHighlight}
+                  onChange={(e) => updateSlide(index, "heroTitleHighlight", e.target.value)}
                   placeholder="e.g. Ab Gar Bethey!"
                 />
               </div>
 
               <div className="form-group">
-                <label>Sub Description</label>
+                <label>Hero Section Subtitle (description below heading)</label>
                 <input
                   type="text"
-                  value={slide.subtitle}
-                  onChange={(e) => updateSlide(index, "subtitle", e.target.value)}
+                  value={slide.heroSubtitle}
+                  onChange={(e) => updateSlide(index, "heroSubtitle", e.target.value)}
                   placeholder="e.g. Order Your Medicines Now"
                 />
               </div>
 
               <div className="form-group">
-                <label>Button Text</label>
+                <label>
+                  Hero Section CTA Button Text
+                  {sale.isActive && (
+                    <span style={{ marginLeft: "8px", fontSize: "12px", color: "#d2222d", fontWeight: "600" }}>
+                      (Auto-filled from active sale — {discountLabel})
+                    </span>
+                  )}
+                </label>
                 <input
                   type="text"
-                  value={slide.buttonText}
-                  onChange={(e) => updateSlide(index, "buttonText", e.target.value)}
+                  value={sale.isActive ? discountLabel : slide.heroCTAButtonText}
+                  onChange={(e) => updateSlide(index, "heroCTAButtonText", e.target.value)}
                   placeholder="e.g. Upto 10% OFF"
+                  disabled={sale.isActive}
                 />
+                {sale.isActive && (
+                  <small style={{ color: "#d2222d", marginTop: "4px", display: "block" }}>
+                    Button will show: <strong>{discountLabel}</strong> — managed via Manage Sale page.
+                  </small>
+                )}
               </div>
 
               <div className="form-group">
-                <label>Slide Image URL</label>
+                <label>Hero Section Slide Image URL</label>
                 <input
                   type="text"
-                  value={slide.imageURL || ""}
-                  onChange={(e) => updateSlide(index, "imageURL", e.target.value)}
+                  value={slide.heroImageURL || ""}
+                  onChange={(e) => updateSlide(index, "heroImageURL", e.target.value)}
                   placeholder="Paste image link here"
                 />
-                {slide.imageURL && (
+                {slide.heroImageURL && (
                   <img
-                    src={slide.imageURL}
+                    src={slide.heroImageURL}
                     alt="Slide preview"
                     style={{ marginTop: "8px", width: "80px", height: "80px", objectFit: "cover", borderRadius: "6px" }}
                     onError={(e) => { e.target.style.display = "none"; }}
@@ -241,6 +256,47 @@ function BusinessInfo() {
             </div>
           </div>
         ))}
+
+        {/* ── Current Sale Info ── */}
+        <h3 style={{ marginBottom: "16px", color: "#d2222d", borderBottom: "2px solid #d2222d", paddingBottom: "6px" }}>
+          <i className="fa-solid fa-percent" style={{ marginRight: "8px" }}></i>
+          Current Sale
+        </h3>
+
+        <div style={{
+          border: "1px solid #e0e0e0",
+          borderRadius: "10px",
+          padding: "20px",
+          marginBottom: "28px",
+          background: sale.isActive ? "#fff5f5" : "#fafafa",
+        }}>
+          {sale.isActive ? (
+            <>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
+                <span style={{ background: "#d2222d", color: "#fff", borderRadius: "6px", padding: "4px 12px", fontWeight: "700", fontSize: "15px" }}>
+                  {discountLabel}
+                </span>
+                <span style={{ background: "#e8f5e9", color: "#2e7d32", borderRadius: "6px", padding: "4px 10px", fontWeight: "600", fontSize: "13px" }}>
+                  Active
+                </span>
+              </div>
+              {sale.label && <p style={{ margin: "4px 0", fontSize: "14px", color: "#333" }}><strong>Sale:</strong> {sale.label}</p>}
+              {sale.startDate && sale.endDate && (
+                <p style={{ margin: "4px 0", fontSize: "14px", color: "#555" }}>
+                  <strong>Duration:</strong> {sale.startDate} → {sale.endDate}
+                </p>
+              )}
+              <p style={{ margin: "10px 0 0", fontSize: "13px", color: "#888" }}>
+                Manage this sale from the <strong>Manage Sale</strong> page in the sidebar.
+              </p>
+            </>
+          ) : (
+            <p style={{ color: "#aaa", fontSize: "14px", margin: 0 }}>
+              <i className="fa-solid fa-circle-info" style={{ marginRight: "6px" }}></i>
+              No active sale. Go to <strong>Manage Sale</strong> to configure one.
+            </p>
+          )}
+        </div>
 
         {/* ── Contact Info ── */}
         <h3 style={{ margin: "28px 0 16px", color: "#d2222d", borderBottom: "2px solid #d2222d", paddingBottom: "6px" }}>
