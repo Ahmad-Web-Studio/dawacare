@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function CTABanner() {
   return (
@@ -12,7 +13,7 @@ function CTABanner() {
             Embrance wellness without breaking the bank! Enjoy a generous 25% discount on a wide range of vital
             medicines at our online pharmacy. Your health matters, and so does your budget.
           </p>
-          <a href="#" className="cta-order-btn">
+          <Link to="/" className="cta-order-btn">
             Place an Order Now
             <svg
               width="24"
@@ -36,7 +37,7 @@ function CTABanner() {
                 strokeLinejoin="round"
               />
             </svg>
-          </a>
+          </Link>
         </div>
 
         {/* CTA Image */}

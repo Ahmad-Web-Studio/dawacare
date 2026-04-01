@@ -4,7 +4,7 @@ import { useSiteInfo, DEFAULT_SITE_INFO } from "../contexts/SiteInfoContext";
 import { useSale } from "../contexts/SaleContext";
 import { toast } from "react-toastify";
 
-const SLIDE_LABELS = ["Slide 1", "Slide 2", "Slide 3"];
+const SLIDE_LABELS = ["Hero Section Slide 1", "Hero Section Slide 2", "Hero Section Slide 3"];
 
 function BusinessInfo() {
   const { siteInfo, loading, saveSiteInfo } = useSiteInfo();
@@ -174,66 +174,79 @@ function BusinessInfo() {
 
             <div className="upload-form" style={{ display: "grid", gap: "12px" }}>
               <div className="form-group">
-                <label>Tagline (small top text)</label>
+                <label>Hero Section Tagline (small top text above heading)</label>
                 <input
                   type="text"
-                  value={slide.tagline}
-                  onChange={(e) => updateSlide(index, "tagline", e.target.value)}
+                  value={slide.heroTagline}
+                  onChange={(e) => updateSlide(index, "heroTagline", e.target.value)}
                   placeholder="e.g. HealthCare sa mily Gi"
                 />
               </div>
 
               <div className="form-group">
-                <label>Main Heading</label>
+                <label>Hero Section Title (main heading)</label>
                 <input
                   type="text"
-                  value={slide.title}
-                  onChange={(e) => updateSlide(index, "title", e.target.value)}
+                  value={slide.heroTitle}
+                  onChange={(e) => updateSlide(index, "heroTitle", e.target.value)}
                   placeholder="e.g. 100% Genuine Dwaai"
                 />
               </div>
 
               <div className="form-group">
-                <label>Heading Highlight (large span)</label>
+                <label>Hero Section Title Highlight (large bold span)</label>
                 <input
                   type="text"
-                  value={slide.bigSpan}
-                  onChange={(e) => updateSlide(index, "bigSpan", e.target.value)}
+                  value={slide.heroTitleHighlight}
+                  onChange={(e) => updateSlide(index, "heroTitleHighlight", e.target.value)}
                   placeholder="e.g. Ab Gar Bethey!"
                 />
               </div>
 
               <div className="form-group">
-                <label>Sub Description</label>
+                <label>Hero Section Subtitle (description below heading)</label>
                 <input
                   type="text"
-                  value={slide.subtitle}
-                  onChange={(e) => updateSlide(index, "subtitle", e.target.value)}
+                  value={slide.heroSubtitle}
+                  onChange={(e) => updateSlide(index, "heroSubtitle", e.target.value)}
                   placeholder="e.g. Order Your Medicines Now"
                 />
               </div>
 
               <div className="form-group">
-                <label>Button Text</label>
+                <label>
+                  Hero Section CTA Button Text
+                  {sale.isActive && (
+                    <span style={{ marginLeft: "8px", fontSize: "12px", color: "#d2222d", fontWeight: "600" }}>
+                      (Auto-filled from active sale — {discountLabel})
+                    </span>
+                  )}
+                </label>
                 <input
                   type="text"
-                  value={slide.buttonText}
-                  onChange={(e) => updateSlide(index, "buttonText", e.target.value)}
+                  value={sale.isActive ? discountLabel : slide.heroCTAButtonText}
+                  onChange={(e) => updateSlide(index, "heroCTAButtonText", e.target.value)}
                   placeholder="e.g. Upto 10% OFF"
+                  disabled={sale.isActive}
                 />
+                {sale.isActive && (
+                  <small style={{ color: "#d2222d", marginTop: "4px", display: "block" }}>
+                    Button will show: <strong>{discountLabel}</strong> — managed via Manage Sale page.
+                  </small>
+                )}
               </div>
 
               <div className="form-group">
-                <label>Slide Image URL</label>
+                <label>Hero Section Slide Image URL</label>
                 <input
                   type="text"
-                  value={slide.imageURL || ""}
-                  onChange={(e) => updateSlide(index, "imageURL", e.target.value)}
+                  value={slide.heroImageURL || ""}
+                  onChange={(e) => updateSlide(index, "heroImageURL", e.target.value)}
                   placeholder="Paste image link here"
                 />
-                {slide.imageURL && (
+                {slide.heroImageURL && (
                   <img
-                    src={slide.imageURL}
+                    src={slide.heroImageURL}
                     alt="Slide preview"
                     style={{ marginTop: "8px", width: "80px", height: "80px", objectFit: "cover", borderRadius: "6px" }}
                     onError={(e) => { e.target.style.display = "none"; }}

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useSale } from "../contexts/SaleContext";
 import { toast } from "react-toastify";
 import { db } from "../firebase/firebase";
-import { collection, getDocs, writeBatch, doc } from "firebase/firestore";
+import { collection, getDocs, writeBatch, doc, getDoc, setDoc } from "firebase/firestore";
 
 function ManageSale() {
   const { sale, saleLoading, saveSale } = useSale();
@@ -48,6 +48,20 @@ function ManageSale() {
         batch.update(doc(db, "products", productDoc.id), { discounts: newDiscountLabel });
       });
       await batch.commit();
+
+      // Sync hero slides' buttonText in Firebase when sale is active
+      if (newDiscountLabel) {
+        const siteRef = doc(db, "siteSettings", "businessInfo");
+        const siteSnap = await getDoc(siteRef);
+        if (siteSnap.exists()) {
+          const siteData = siteSnap.data();
+          const updatedSlides = (siteData.slides || []).map((slide) => ({
+            ...slide,
+            heroCTAButtonText: newDiscountLabel,
+          }));
+          await setDoc(siteRef, { ...siteData, slides: updatedSlides }, { merge: true });
+        }
+      }
 
       toast.success("Sale settings saved and all products updated");
     } catch (err) {

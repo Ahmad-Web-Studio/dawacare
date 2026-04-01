@@ -34,13 +34,13 @@ function HeroSection() {
             <div className="swiper-slide" key={index}>
               <div className="hero-content">
                 <div className="hero-text">
-                  <h2 className="brand-tagline">{slide.tagline}</h2>
+                  <h2 className="brand-tagline">{slide.heroTagline}</h2>
                   <h1 className="hero-title">
-                    {slide.title}
-                    <span className="big-span">{index === 1 ? <><br />{slide.bigSpan}</> : slide.bigSpan}</span>
+                    {slide.heroTitle}
+                    <span className="big-span">{index === 1 ? <><br />{slide.heroTitleHighlight}</> : slide.heroTitleHighlight}</span>
                   </h1>
-                  <h2 className="hero-subtitle">{slide.subtitle}</h2>
-                  <a href="#products" className="cta-button">{slide.buttonText}</a>
+                  <h2 className="hero-subtitle">{slide.heroSubtitle}</h2>
+                  <a href="#products" className="cta-button">{slide.heroCTAButtonText}</a>
                 </div>
 
                 <div className="hero-image-wrapper">
@@ -48,7 +48,7 @@ function HeroSection() {
                     <img src="/assets/Images/Ellipse 2.png" alt="Decorative circle" />
                   </div>
                   <img
-                    src={slide.imageURL || "/assets/Images/steptodown.com322394 2.png"}
+                    src={slide.heroImageURL || "/assets/Images/steptodown.com322394 2.png"}
                     alt="Happy Customer"
                     className="hero-img"
                   />
