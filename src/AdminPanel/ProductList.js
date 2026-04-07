@@ -1,11 +1,11 @@
-// src/AdminPanel/UploadProducts.js
+// src/AdminPanel/ProductList.js
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase/firebase";
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, orderBy, query, writeBatch, deleteField } from "firebase/firestore";
-import { toast } from "react-toastify";
+import toast from "../utils/toast";
 import { useSale } from "../contexts/SaleContext";
 
-function UploadProducts() {
+function ProductList() {
   const { sale, discountLabel } = useSale();
   const [name, setName] = useState("");
   const [formula, setFormula] = useState("");
@@ -437,4 +437,4 @@ function UploadProducts() {
   );
 }
 
-export default UploadProducts;
+export default ProductList;

@@ -5,9 +5,9 @@ import Sidebar from "./Sidebar";
 import DashboardHome from "./DashboardHome";
 import Orders from "./Orders";
 import Users from "./Users";
-import UploadProducts from "./UploadProducts";
+import ProductList from "./ProductList";
 import AddProduct from "./AddProduct";
-import BusinessInfo from "./BusinessInfo";
+import ContentManagement from "./ContentManagement";
 import ManageSale from "./ManageSale";
 import ManageBrands from "./ManageBrands";
 
@@ -26,11 +26,11 @@ const Dashboard = () => {
           {/* Admin pages */}
           <Route path="orders" element={<Orders />} />
           <Route path="users" element={<Users />} />
-          <Route path="UploadProducts" element={<UploadProducts/>}/>
-          <Route path="AddProduct" element={<AddProduct/>}/>
-          <Route path="BusinessInfo" element={<BusinessInfo/>}/>
-          <Route path="ManageSale" element={<ManageSale/>}/>
-          <Route path="ManageBrands" element={<ManageBrands/>}/>
+          <Route path="ProductList" element={<ProductList />} />
+          <Route path="AddProduct" element={<AddProduct />} />
+          <Route path="ContentManagement" element={<ContentManagement />} />
+          <Route path="ManageSale" element={<ManageSale />} />
+          <Route path="ManageBrands" element={<ManageBrands />} />
         </Routes>
       </div>
     </div>

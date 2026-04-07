@@ -43,12 +43,12 @@ export const DEFAULT_SITE_INFO = {
 // Migrate a single slide from old field names to new field names
 function migrateSlide(slide) {
   return {
-    heroTagline:         slide.heroTagline         ?? slide.tagline    ?? "",
-    heroTitle:           slide.heroTitle           ?? slide.title      ?? "",
-    heroTitleHighlight:  slide.heroTitleHighlight  ?? slide.bigSpan    ?? "",
-    heroSubtitle:        slide.heroSubtitle        ?? slide.subtitle   ?? "",
-    heroCTAButtonText:   slide.heroCTAButtonText   ?? slide.buttonText ?? "",
-    heroImageURL:        slide.heroImageURL        ?? slide.imageURL   ?? "",
+    heroTagline: slide.heroTagline ?? slide.tagline ?? "",
+    heroTitle: slide.heroTitle ?? slide.title ?? "",
+    heroTitleHighlight: slide.heroTitleHighlight ?? slide.bigSpan ?? "",
+    heroSubtitle: slide.heroSubtitle ?? slide.subtitle ?? "",
+    heroCTAButtonText: slide.heroCTAButtonText ?? slide.buttonText ?? "",
+    heroImageURL: slide.heroImageURL ?? slide.imageURL ?? "",
   };
 }
 
@@ -57,7 +57,7 @@ export function SiteInfoProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const ref = doc(db, "siteSettings", "businessInfo");
+    const ref = doc(db, "siteSettings", "ContentManagement");
     const unsubscribe = onSnapshot(ref, (snap) => {
       if (snap.exists()) {
         const data = snap.data();
@@ -74,7 +74,7 @@ export function SiteInfoProvider({ children }) {
   }, []);
 
   const saveSiteInfo = async (newInfo) => {
-    const ref = doc(db, "siteSettings", "businessInfo");
+    const ref = doc(db, "siteSettings", "ContentManagement");
     await setDoc(ref, newInfo, { merge: true });
   };
 

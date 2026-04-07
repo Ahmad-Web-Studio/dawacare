@@ -1,12 +1,16 @@
 // src/AdminPanel/ManageBrands.js
 import React, { useState, useEffect } from "react";
 import { useBrands } from "../contexts/BrandsContext";
-import { toast } from "react-toastify";
+import toast from "../utils/toast";
+
+const EMPTY_MODAL = { name: "", logoUrl: "" };
 
 function ManageBrands() {
   const { brands, loading, saveBrands } = useBrands();
   const [localBrands, setLocalBrands] = useState([]);
   const [saving, setSaving] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState(EMPTY_MODAL);
 
   useEffect(() => {
     if (!loading) {
@@ -14,11 +18,30 @@ function ManageBrands() {
     }
   }, [loading, brands]);
 
-  const handleAdd = () => {
+  const openModal = () => {
+    setModalData(EMPTY_MODAL);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setModalData(EMPTY_MODAL);
+  };
+
+  const handleModalSave = () => {
+    if (!modalData.name.trim()) {
+      toast.error("Brand name is required");
+      return;
+    }
+    if (!modalData.logoUrl.trim()) {
+      toast.error("Brand logo URL is required");
+      return;
+    }
     setLocalBrands((prev) => [
       ...prev,
-      { id: Date.now().toString(), name: "", logoUrl: "", order: prev.length },
+      { id: Date.now().toString(), name: modalData.name.trim(), logoUrl: modalData.logoUrl.trim(), order: prev.length },
     ]);
+    closeModal();
   };
 
   const handleChange = (index, field, value) => {
@@ -208,7 +231,7 @@ function ManageBrands() {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <button
             type="button"
-            onClick={handleAdd}
+            onClick={openModal}
             style={{
               maxWidth: "fit-content",
               background: "#fff",
@@ -236,6 +259,120 @@ function ManageBrands() {
           </button>
         </form>
       </div>
+
+      {/* Add Brand Modal */}
+      {modalOpen && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.45)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+          onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
+        >
+          <div
+            style={{
+              background: "#fff",
+              borderRadius: "14px",
+              padding: "32px",
+              width: "100%",
+              maxWidth: "460px",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+              <h3 style={{ margin: 0, color: "#d2222d" }}>
+                <i className="fa-solid fa-plus" style={{ marginRight: "8px" }}></i>
+                Add New Brand
+              </h3>
+              <button
+                type="button"
+                onClick={closeModal}
+                style={{ background: "none", border: "none", fontSize: "20px", cursor: "pointer", color: "#888", lineHeight: 1 }}
+              >
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <div className="upload-form" style={{ display: "grid", gap: "16px" }}>
+              <div className="form-group">
+                <label>Brand Name <span style={{ color: "#d2222d" }}>*</span></label>
+                <input
+                  type="text"
+                  value={modalData.name}
+                  onChange={(e) => setModalData((d) => ({ ...d, name: e.target.value }))}
+                  placeholder="e.g. Pfizer"
+                  autoFocus
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Brand Logo URL <span style={{ color: "#d2222d" }}>*</span></label>
+                <input
+                  type="text"
+                  value={modalData.logoUrl}
+                  onChange={(e) => setModalData((d) => ({ ...d, logoUrl: e.target.value }))}
+                  placeholder="Paste logo image link here"
+                />
+              </div>
+
+              {modalData.logoUrl && (
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <span style={{ fontSize: "13px", color: "#888" }}>Preview:</span>
+                  <div style={{ background: "#ffffff", border: "1px solid #e0e0e0", borderRadius: "50%", width: "70px", height: "70px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                    <img
+                      src={modalData.logoUrl}
+                      alt={modalData.name || "Brand logo"}
+                      style={{ width: "55px", height: "55px", objectFit: "contain" }}
+                      onError={(e) => {
+                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(modalData.name || "B")}&background=d2222d&color=fff&size=55&bold=true&rounded=true`;
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div style={{ display: "flex", gap: "12px", marginTop: "28px", justifyContent: "flex-end" }}>
+              <button
+                type="button"
+                onClick={closeModal}
+                style={{
+                  background: "#f5f5f5",
+                  border: "1px solid #ddd",
+                  borderRadius: "8px",
+                  padding: "10px 20px",
+                  cursor: "pointer",
+                  color: "#555",
+                  fontWeight: "500",
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleModalSave}
+                style={{
+                  background: "#d2222d",
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "10px 24px",
+                  cursor: "pointer",
+                  color: "#fff",
+                  fontWeight: "600",
+                }}
+              >
+                <i className="fa-solid fa-plus" style={{ marginRight: "6px" }}></i>
+                Add Brand
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

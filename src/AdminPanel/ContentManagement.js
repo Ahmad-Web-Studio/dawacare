@@ -1,12 +1,12 @@
-// src/AdminPanel/BusinessInfo.js
+// src/AdminPanel/ContentManagement.js
 import React, { useState, useEffect } from "react";
 import { useSiteInfo, DEFAULT_SITE_INFO } from "../contexts/SiteInfoContext";
 import { useSale } from "../contexts/SaleContext";
-import { toast } from "react-toastify";
+import toast from "../utils/toast";
 
 const SLIDE_LABELS = ["Hero Section Slide 1", "Hero Section Slide 2", "Hero Section Slide 3"];
 
-function BusinessInfo() {
+function ContentManagement() {
   const { siteInfo, loading, saveSiteInfo } = useSiteInfo();
   const { sale, discountLabel } = useSale();
 
@@ -63,7 +63,7 @@ function BusinessInfo() {
   return (
     <div className="upload-page">
       <div className="upload-container">
-        <h2>Business Info</h2>
+        <h2>Content Management</h2>
         <p style={{ color: "#888", marginBottom: "24px", fontSize: "14px" }}>
           Changes are saved to the database and reflected on the website immediately.
         </p>
@@ -349,4 +349,4 @@ function BusinessInfo() {
   );
 }
 
-export default BusinessInfo;
+export default ContentManagement;

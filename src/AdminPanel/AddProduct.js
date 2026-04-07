@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { db } from "../firebase/firebase";
 import { collection, addDoc } from "firebase/firestore";
-import { toast } from "react-toastify";
+import toast from "../utils/toast";
 import { useSale } from "../contexts/SaleContext";
 
 const nameOptions = [

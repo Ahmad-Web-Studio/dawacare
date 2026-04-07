@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import toast from "../utils/toast";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import "./login.css";

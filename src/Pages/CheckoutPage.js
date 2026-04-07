@@ -7,7 +7,7 @@ import { useCart } from "../contexts/CartContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { db } from "../firebase/firebase";
-import { toast } from "react-toastify";
+import toast from "../utils/toast";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const provinces = [

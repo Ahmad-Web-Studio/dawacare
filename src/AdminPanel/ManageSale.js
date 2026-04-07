@@ -1,7 +1,7 @@
 // src/AdminPanel/ManageSale.js
 import React, { useState, useEffect } from "react";
 import { useSale } from "../contexts/SaleContext";
-import { toast } from "react-toastify";
+import toast from "../utils/toast";
 import { db } from "../firebase/firebase";
 import { collection, getDocs, writeBatch, doc, getDoc, setDoc } from "firebase/firestore";
 
@@ -51,7 +51,7 @@ function ManageSale() {
 
       // Sync hero slides' buttonText in Firebase when sale is active
       if (newDiscountLabel) {
-        const siteRef = doc(db, "siteSettings", "businessInfo");
+        const siteRef = doc(db, "siteSettings", "ContentManagement");
         const siteSnap = await getDoc(siteRef);
         if (siteSnap.exists()) {
           const siteData = siteSnap.data();
