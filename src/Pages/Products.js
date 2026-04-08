@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { db } from "../firebase/firebase";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { useCart } from "../contexts/CartContext";
@@ -11,6 +11,8 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const { addToCart } = useCart();
   const { sale } = useSale();
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("q") || "";
 
   const getDiscountedPrice = (retailPrice) => {
     if (sale.isActive && sale.discountPercent > 0 && retailPrice) {
@@ -48,11 +50,13 @@ const Products = () => {
             color: "#d2222d",
           }}
         >
-          OUR ALL PRODUCTS
+          {searchQuery ? `Results for "${searchQuery}"` : "OUR ALL PRODUCTS"}
         </h1>
 
         <div className="products-container">
-          {products.map((product) => (
+          {products.filter(p =>
+            !searchQuery || p.name?.toLowerCase().includes(searchQuery.toLowerCase())
+          ).map((product) => (
             <Link
               to={`/product/${product.id}`}   // ✅ ONLY CHANGE
               style={{ textDecoration: "none" }}

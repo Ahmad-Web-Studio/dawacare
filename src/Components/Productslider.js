@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import Swiper from "swiper";
 import { Link } from "react-router-dom";
-import { Autoplay, Pagination } from "swiper/modules";
+import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 import { db } from "../firebase/firebase";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
@@ -52,13 +53,13 @@ function Productslider() {
   useEffect(() => {
     if (swiperRef.current) {
       swiperInstance.current = new Swiper(swiperRef.current, {
-        modules: [Autoplay, Pagination],
+        modules: [Navigation, Pagination],
         slidesPerView: 3,
         spaceBetween: 30,
         loop: true,
-        autoplay: {
-          delay: 2500,
-          disableOnInteraction: false,
+        navigation: {
+          prevEl: ".product-prev",
+          nextEl: ".product-next",
         },
         pagination: {
           el: ".product-pagination",
@@ -105,66 +106,73 @@ function Productslider() {
       </div>
 
       {/* SWIPER */}
-      <div className="swiper product-swiper" ref={swiperRef}>
-        <div className="swiper-wrapper">
-          {products.map((product) => (
-            <div className="swiper-slide shrink-slide" key={product.id}>
-              <Link
-                to={`/product/${product.id}`}
-                className="product-card-link"
-                style={{ textDecoration: "none", display: "flex", width: "100%", height: "100%" }}
-              >
-                <div className="product-card">
-                  <div className="card-image-box">
-                    {sale.isActive && sale.discountPercent > 0 && (
-                      <span className="discount-badge">{sale.discountPercent}%</span>
-                    )}
-                    {product.isOutOfStock && (
-                      <span className="oos-overlay-badge">Out of Stock</span>
-                    )}
-                    <img src={product.picture} alt={product.name} />
+      <div className="slider-nav-wrapper">
+        <button className="slider-nav-btn product-prev" aria-label="Previous">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13H6.75L12 18.25l-.66.75l-6.5-6.5l6.5-6.5l.66.75L6.75 12H19z"/></svg>
+        </button>
+        <div className="swiper product-swiper" ref={swiperRef}>
+          <div className="swiper-wrapper">
+            {products.map((product) => (
+              <div className="swiper-slide shrink-slide" key={product.id}>
+                <Link
+                  to={`/product/${product.id}`}
+                  className="product-card-link"
+                  style={{ textDecoration: "none", display: "flex", width: "100%", height: "100%" }}
+                >
+                  <div className="product-card">
+                    <div className="card-image-box">
+                      {sale.isActive && sale.discountPercent > 0 && (
+                        <span className="discount-badge">{sale.discountPercent}%</span>
+                      )}
+                      {product.isOutOfStock && (
+                        <span className="oos-overlay-badge">Out of Stock</span>
+                      )}
+                      <img src={product.picture} alt={product.name} />
 
-                    {/* Cart button — disabled if out of stock */}
-                    {product.isOutOfStock ? (
-                      <button className="add-cart-btn add-cart-btn--oos" disabled title="Out of Stock">
-                        <FontAwesomeIcon icon={faCartShopping} />
-                      </button>
-                    ) : (
-                      <button
-                        className="add-cart-btn"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          const discountedPrice = getDiscountedPrice(product.retailPrice);
-                          addToCart({ ...product, price: discountedPrice ?? product.price });
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faCartShopping} />
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="card-info">
-                    <div className="rating">★ ★ ★ ★</div>
-                    <h4 className="product-name">{product.name}</h4>
-                    <p className="brand-name">{product.manufacturedBy}</p>
-
-                    <div className="price-container">
-                      {getDiscountedPrice(product.retailPrice) ? (
-                        <>
-                          <span className="new-price">Rs. {getDiscountedPrice(product.retailPrice)}</span>
-                          <span className="old-price">Rs. {product.retailPrice}</span>
-                        </>
+                      {/* Cart button — disabled if out of stock */}
+                      {product.isOutOfStock ? (
+                        <button className="add-cart-btn add-cart-btn--oos" disabled title="Out of Stock">
+                          <FontAwesomeIcon icon={faCartShopping} />
+                        </button>
                       ) : (
-                        <span className="new-price">Rs. {product.price}</span>
+                        <button
+                          className="add-cart-btn"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            const discountedPrice = getDiscountedPrice(product.retailPrice);
+                            addToCart({ ...product, price: discountedPrice ?? product.price });
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCartShopping} />
+                        </button>
                       )}
                     </div>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          ))}
-        </div>
 
+                    <div className="card-info">
+                      <div className="rating">★ ★ ★ ★</div>
+                      <h4 className="product-name">{product.name}</h4>
+                      <p className="brand-name">{product.manufacturedBy}</p>
+
+                      <div className="price-container">
+                        {getDiscountedPrice(product.retailPrice) ? (
+                          <>
+                            <span className="new-price">Rs. {getDiscountedPrice(product.retailPrice)}</span>
+                            <span className="old-price">Rs. {product.retailPrice}</span>
+                          </>
+                        ) : (
+                          <span className="new-price">Rs. {product.price}</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+        <button className="slider-nav-btn product-next" aria-label="Next">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M4 12h12.25L11 6.75l.66-.75l6.5 6.5l-6.5 6.5l-.66-.75L16.25 13H4z"/></svg>
+        </button>
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import Swiper from "swiper";
-import { Autoplay, Pagination } from "swiper/modules";
+import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
 import { useBrands } from "../contexts/BrandsContext";
 
 function BrandsSection() {
@@ -22,20 +23,21 @@ function BrandsSection() {
     }
 
     swiperInstance.current = new Swiper(swiperRef.current, {
-      modules: [Autoplay, Pagination],
+      modules: [Navigation, Pagination],
       slidesPerView: 4,
       spaceBetween: 30,
       loop: true,
-      autoplay: {
-        delay: 2500,
-        disableOnInteraction: false,
+      navigation: {
+        prevEl: ".brands-prev",
+        nextEl: ".brands-next",
       },
       pagination: {
         el: ".brands-pagination",
         clickable: true,
       },
       breakpoints: {
-        0: { slidesPerView: 2 },
+        0: { slidesPerView: 1 },
+        480: { slidesPerView: 2 },
         576: { slidesPerView: 3 },
         992: { slidesPerView: 6 },
       },
@@ -61,26 +63,34 @@ function BrandsSection() {
         </div>
 
         {/* SWIPER */}
-        <div className="swiper brands-swiper" ref={swiperRef}>
-          <div className="swiper-wrapper">
-            {sortedBrands.map((brand) => (
-              <div key={brand.id} className="swiper-slide brand-slide">
-                <div className="brand-item">
-                  <div className="brand-circle">
-                    <img
-                      src={brand.logoUrl}
-                      alt={brand.name}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(brand.name)}&background=d2222d&color=fff&size=128&bold=true&rounded=true`;
-                      }}
-                    />
+        <div className="slider-nav-wrapper">
+          <button className="slider-nav-btn brands-prev" aria-label="Previous">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13H6.75L12 18.25l-.66.75l-6.5-6.5l6.5-6.5l.66.75L6.75 12H19z"/></svg>
+          </button>
+          <div className="swiper brands-swiper" ref={swiperRef}>
+            <div className="swiper-wrapper">
+              {sortedBrands.map((brand) => (
+                <div key={brand.id} className="swiper-slide brand-slide">
+                  <div className="brand-item">
+                    <div className="brand-circle">
+                      <img
+                        src={brand.logoUrl}
+                        alt={brand.name}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(brand.name)}&background=d2222d&color=fff&size=128&bold=true&rounded=true`;
+                        }}
+                      />
+                    </div>
+                    <p className="brand-name">{brand.name}</p>
                   </div>
-                  <p className="brand-name">{brand.name}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+          <button className="slider-nav-btn brands-next" aria-label="Next">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M4 12h12.25L11 6.75l.66-.75l6.5 6.5l-6.5 6.5l-.66-.75L16.25 13H4z"/></svg>
+          </button>
         </div>
       </div>
     </section>

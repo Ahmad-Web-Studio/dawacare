@@ -56,27 +56,32 @@ const About = () => {
       <Header />
 
       {/* ── Hero Banner ── */}
-      <section className="about-hero">
-        <div className="about-hero-inner">
-          <span className="about-eyebrow">Who We Are</span>
-          <h1 className="about-hero-title">
-            Healthcare, <span className="about-red">Simplified.</span>
-          </h1>
-          <p className="about-hero-sub">
-            Dawacare is a trusted healthcare platform committed to making health and wellness products
-            easily accessible to everyone — delivering quality, trust, and convenience right to your door.
-          </p>
-          <Link to="/" className="cta-button about-hero-cta">
-            Shop Now &nbsp;<i className="fa-solid fa-arrow-right"></i>
-          </Link>
-        </div>
-        <div className="about-hero-badge-grid">
-          {stats.map((s, i) => (
-            <div className="about-stat-card" key={i}>
-              <span className="about-stat-value">{s.value}</span>
-              <span className="about-stat-label">{s.label}</span>
+      <section className="hero-section">
+        <div className="hero-content about-hero-content">
+          <div className="hero-text about-hero-text">
+            <span className="about-eyebrow">Who We Are</span>
+            <h1 className="hero-title about-hero-title">
+              Healthcare, <span className="big-span">Simplified.</span>
+            </h1>
+            <p className="hero-subtitle about-hero-sub">
+              Dawacare is a trusted healthcare platform committed to making health and wellness products
+              easily accessible to everyone — delivering quality, trust, and convenience right to your door.
+            </p>
+            <Link to="/" className="cta-button about-hero-cta">
+              Shop Now &nbsp;<i className="fa-solid fa-arrow-right"></i>
+            </Link>
+          </div>
+
+          <div className="hero-image-wrapper about-hero-image-wrapper">
+            <div className="about-hero-badge-grid">
+              {stats.map((s, i) => (
+                <div className="about-stat-card" key={i}>
+                  <span className="about-stat-value">{s.value}</span>
+                  <span className="about-stat-label">{s.label}</span>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </section>
 

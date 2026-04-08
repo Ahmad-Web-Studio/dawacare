@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import Swiper from "swiper";
-import { Autoplay, Pagination } from "swiper/modules";
+import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 function Testimonials() {
   const swiperRef = useRef(null);
@@ -11,15 +12,15 @@ function Testimonials() {
   useEffect(() => {
     if (swiperRef.current) {
       swiperInstance.current = new Swiper(swiperRef.current, {
-        modules: [Autoplay, Pagination],
+        modules: [Navigation, Pagination],
 
-        slidesPerView: 3,
+        slidesPerView: 4,
         spaceBetween: 30,
         loop: true,
 
-        autoplay: {
-          delay: 2500,
-          disableOnInteraction: false,
+        navigation: {
+          prevEl: ".testimonials-prev",
+          nextEl: ".testimonials-next",
         },
 
         pagination: {
@@ -31,6 +32,7 @@ function Testimonials() {
           0: { slidesPerView: 1 },
           768: { slidesPerView: 2 },
           1024: { slidesPerView: 3 },
+          1280: { slidesPerView: 4 },
         },
       });
     }
@@ -56,15 +58,33 @@ function Testimonials() {
       text: "Lorem ipsum dolor sit amet consectetur. Eget id id interdum pharetra. Hendrerit fringilla bibendum ac ac leo. Mattis in a morbi nunc pharetra dignissim id at venenatis."
     },
     {
+      name: "Liam",
+      date: "23 March 2025",
+      img: "./assets/images/Rectangle 8 (1).png",
+      text: "Lorem ipsum dolor sit amet consectetur. Eget id id interdum pharetra. Hendrerit fringilla bibendum ac ac leo. Mattis in a morbi nunc pharetra dignissim id at venenatis."
+    },
+    {
       name: "Noah",
       date: "22 Feb 2024",
       img: "./assets/images/Rectangle 8 (3).png",
       text: "Lorem ipsum dolor sit amet consectetur. Eget id id interdum pharetra. Hendrerit fringilla bibendum ac ac leo. Mattis in a morbi nunc pharetra dignissim id at venenatis."
     },
     {
+      name: "Liam",
+      date: "23 March 2025",
+      img: "./assets/images/Rectangle 8 (1).png",
+      text: "Lorem ipsum dolor sit amet consectetur. Eget id id interdum pharetra. Hendrerit fringilla bibendum ac ac leo. Mattis in a morbi nunc pharetra dignissim id at venenatis."
+    },
+    {
       name: "Noah",
       date: "22 Feb 2024",
       img: "./assets/images/Rectangle 8.png",
+      text: "Lorem ipsum dolor sit amet consectetur. Eget id id interdum pharetra. Hendrerit fringilla bibendum ac ac leo. Mattis in a morbi nunc pharetra dignissim id at venenatis."
+    },
+    {
+      name: "Liam",
+      date: "23 March 2025",
+      img: "./assets/images/Rectangle 8 (1).png",
       text: "Lorem ipsum dolor sit amet consectetur. Eget id id interdum pharetra. Hendrerit fringilla bibendum ac ac leo. Mattis in a morbi nunc pharetra dignissim id at venenatis."
     },
   ];
@@ -77,7 +97,7 @@ function Testimonials() {
           <h2 className="section-title">
             What Our <span className="text-red big-span">Client Say</span>
           </h2>
-          <a href="#" className="see-all">
+          <button className="see-all" style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
             <p>See All</p>
             <svg
               width="15"
@@ -91,32 +111,38 @@ function Testimonials() {
                 fill="#D2222D"
               />
             </svg>
-          </a>
+          </button>
         </div>
 
         {/* Testimonials Swiper */}
-        <div className="swiper testimonials-swiper" ref={swiperRef}>
-          <div className="swiper-wrapper">
-            {testimonialsData.map((testimonial, index) => (
-              <div className="swiper-slide testimonial-card" key={index}>
-                <div className="user-info">
-                  <img
-                    src={testimonial.img}
-                    alt={testimonial.name}
-                    className="user-avatar"
-                  />
-                  <div className="user-meta">
-                    <h4 className="user-name">{testimonial.name}</h4>
-                    <p className="post-date">{testimonial.date}</p>
+        <div className="slider-nav-wrapper">
+          <button className="slider-nav-btn testimonials-prev" aria-label="Previous">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13H6.75L12 18.25l-.66.75l-6.5-6.5l6.5-6.5l.66.75L6.75 12H19z"/></svg>
+          </button>
+          <div className="swiper testimonials-swiper" ref={swiperRef}>
+            <div className="swiper-wrapper">
+              {testimonialsData.map((testimonial, index) => (
+                <div className="swiper-slide testimonial-card" key={index}>
+                  <div className="user-info">
+                    <img
+                      src={testimonial.img}
+                      alt={testimonial.name}
+                      className="user-avatar"
+                    />
+                    <div className="user-meta">
+                      <h4 className="user-name">{testimonial.name}</h4>
+                      <p className="post-date">{testimonial.date}</p>
+                    </div>
                   </div>
+                  <div className="rating">★★★★★</div>
+                  <p className="testimonial-text">{testimonial.text}</p>
                 </div>
-                <div className="rating">★★★★★</div>
-                <p className="testimonial-text">{testimonial.text}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-
-          {/* Pagination */}
+          <button className="slider-nav-btn testimonials-next" aria-label="Next">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M4 12h12.25L11 6.75l.66-.75l6.5 6.5l-6.5 6.5l-.66-.75L16.25 13H4z"/></svg>
+          </button>
         </div>
       </div>
     </section>
