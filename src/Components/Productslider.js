@@ -6,7 +6,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 import { db } from "../firebase/firebase";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 
 // ✅ Import Cart Context
 import { useCart } from "../contexts/CartContext";
@@ -34,19 +34,18 @@ function Productslider() {
 
   // Fetch products
   useEffect(() => {
-    const fetchProducts = async () => {
-      const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
-      const snapshot = await getDocs(q);
-
+    const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
       const productList = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
-
       setProducts(productList);
-    };
+    }, (error) => {
+      console.error("Error fetching slider products:", error);
+    });
 
-    fetchProducts();
+    return () => unsubscribe();
   }, []);
 
   // Swiper
@@ -66,8 +65,8 @@ function Productslider() {
           clickable: true,
         },
         breakpoints: {
-          0: { slidesPerView: 2 },
-          768: { slidesPerView: 3 },
+          0: { slidesPerView: 1 },
+          600: { slidesPerView: 2 },
           1024: { slidesPerView: 4 },
         },
       });
@@ -110,43 +109,58 @@ function Productslider() {
         <div className="swiper-wrapper">
           {products.map((product) => (
             <div className="swiper-slide shrink-slide" key={product.id}>
-              <div className="product-card">
-                <div className="card-image-box">
-                  {sale.isActive && sale.discountPercent > 0 && (
-                    <span className="discount-badge">{sale.discountPercent}%</span>
-                  )}
-                  <img src={product.picture} alt={product.name} />
+              <Link
+                to={`/product/${product.id}`}
+                className="product-card-link"
+                style={{ textDecoration: "none", display: "flex", width: "100%", height: "100%" }}
+              >
+                <div className="product-card">
+                  <div className="card-image-box">
+                    {sale.isActive && sale.discountPercent > 0 && (
+                      <span className="discount-badge">{sale.discountPercent}%</span>
+                    )}
+                    {product.isOutOfStock && (
+                      <span className="oos-overlay-badge">Out of Stock</span>
+                    )}
+                    <img src={product.picture} alt={product.name} />
 
-                  {/* ✅ Add to cart icon button */}
-                  <button
-                    className="add-cart-btn"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const discountedPrice = getDiscountedPrice(product.retailPrice);
-                      addToCart({ ...product, price: discountedPrice ?? product.price });
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faCartShopping} />
-                  </button>
-                </div>
-
-                <div className="card-info">
-                  <div className="rating">★ ★ ★ ★</div>
-                  <h4 className="product-name">{product.name}</h4>
-                  <p className="brand-name">{product.manufacturedBy}</p>
-
-                  <div className="price-container">
-                    {getDiscountedPrice(product.retailPrice) ? (
-                      <>
-                        <span className="new-price">Rs. {getDiscountedPrice(product.retailPrice)}</span>
-                        <span className="old-price">Rs. {product.retailPrice}</span>
-                      </>
+                    {/* Cart button — disabled if out of stock */}
+                    {product.isOutOfStock ? (
+                      <button className="add-cart-btn add-cart-btn--oos" disabled title="Out of Stock">
+                        <FontAwesomeIcon icon={faCartShopping} />
+                      </button>
                     ) : (
-                      <span className="new-price">Rs. {product.price}</span>
+                      <button
+                        className="add-cart-btn"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const discountedPrice = getDiscountedPrice(product.retailPrice);
+                          addToCart({ ...product, price: discountedPrice ?? product.price });
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCartShopping} />
+                      </button>
                     )}
                   </div>
+
+                  <div className="card-info">
+                    <div className="rating">★ ★ ★ ★</div>
+                    <h4 className="product-name">{product.name}</h4>
+                    <p className="brand-name">{product.manufacturedBy}</p>
+
+                    <div className="price-container">
+                      {getDiscountedPrice(product.retailPrice) ? (
+                        <>
+                          <span className="new-price">Rs. {getDiscountedPrice(product.retailPrice)}</span>
+                          <span className="old-price">Rs. {product.retailPrice}</span>
+                        </>
+                      ) : (
+                        <span className="new-price">Rs. {product.price}</span>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
           ))}
         </div>

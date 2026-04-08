@@ -10,6 +10,7 @@ import AddProduct from "./AddProduct";
 import ContentManagement from "./ContentManagement";
 import ManageSale from "./ManageSale";
 import ManageBrands from "./ManageBrands";
+import StockManagement from "./StockManagement";
 
 const Dashboard = () => {
   return (
@@ -28,6 +29,7 @@ const Dashboard = () => {
           <Route path="users" element={<Users />} />
           <Route path="ProductList" element={<ProductList />} />
           <Route path="AddProduct" element={<AddProduct />} />
+          <Route path="StockManagement" element={<StockManagement />} />
           <Route path="ContentManagement" element={<ContentManagement />} />
           <Route path="ManageSale" element={<ManageSale />} />
           <Route path="ManageBrands" element={<ManageBrands />} />

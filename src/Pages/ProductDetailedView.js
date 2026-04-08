@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../firebase/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { useCart } from "../contexts/CartContext";
 import { useSale } from "../contexts/SaleContext";
 import Header from "../Components/Header";
@@ -24,16 +24,20 @@ const ProductDetailedView = () => {
   };
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      const docRef = doc(db, "products", id);
-      const docSnap = await getDoc(docRef);
+    // Reset state when product changes
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setQuantity(1);
 
+    const docRef = doc(db, "products", id);
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
       if (docSnap.exists()) {
         setProduct({ id: docSnap.id, ...docSnap.data() });
       }
-    };
+    }, (error) => {
+      console.error("Error fetching product detail:", error);
+    });
 
-    fetchProduct();
+    return () => unsubscribe();
   }, [id]);
 
   if (!product) return <h2>Loading...</h2>;
@@ -42,7 +46,7 @@ const ProductDetailedView = () => {
     <>
       <Header />
 
-      <div style={{ margin: "100px 0px" }} className="product-detail-container">
+      <div className="product-detail-container" style={{ marginTop: "100px" }}>
         {/* LEFT IMAGE */}
         <div className="product-detail-left">
           <img src={product.picture} alt={product.name} />
@@ -59,9 +63,6 @@ const ProductDetailedView = () => {
               <div className="price">
                 <span className="new-price">Rs. {discountedPrice}</span>
                 <span className="old-price">Rs. {product.retailPrice}</span>
-                {sale.discountPercent > 0 && (
-                  <span className="discount-badge">{sale.discountPercent}%</span>
-                )}
               </div>
             ) : (
               <p className="price">Rs. {product.retailPrice || product.price}</p>
@@ -73,7 +74,6 @@ const ProductDetailedView = () => {
             {product.formula && <p><strong>Formula:</strong> {product.formula}</p>}
             {product.type && <p><strong>Type:</strong> {product.type}</p>}
             {product.quantityPerPack > 0 && <p><strong>Quantity (Tabs/Pack):</strong> {product.quantityPerPack}</p>}
-            {product.discounts && <p><strong>Discounts:</strong> {product.discounts}</p>}
           </div>
 
           {/* Description */}
@@ -89,26 +89,35 @@ const ProductDetailedView = () => {
           </div>
 
           {/* Quantity */}
-          <div className="quantity-box">
-            <button
-              onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
-            >
-              -
-            </button>
-            <span>{quantity}</span>
-            <button onClick={() => setQuantity(quantity + 1)}>+</button>
-          </div>
+          {!product.isOutOfStock && (
+            <div className="quantity-box">
+              <button
+                onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+              >
+                -
+              </button>
+              <span>{quantity}</span>
+              <button onClick={() => setQuantity(quantity + 1)}>+</button>
+            </div>
+          )}
 
           {/* Add To Cart */}
-          <button
-            className="add-to-cart-btn"
-            onClick={() => {
-              const discountedPrice = getDiscountedPrice(product.retailPrice);
-              addToCart({ ...product, price: discountedPrice ?? product.price, quantity });
-            }}
-          >
-            Add to Cart
-          </button>
+          {product.isOutOfStock ? (
+            <div className="product-oos-banner">
+              <span className="product-oos-icon">⚠</span>
+              <span>This product is currently <strong>Out of Stock</strong>. Please check back later.</span>
+            </div>
+          ) : (
+            <button
+              className="add-to-cart-btn"
+              onClick={() => {
+                const discountedPrice = getDiscountedPrice(product.retailPrice);
+                addToCart({ ...product, price: discountedPrice ?? product.price, quantity });
+              }}
+            >
+              Add to Cart
+            </button>
+          )}
         </div>
       </div>
 

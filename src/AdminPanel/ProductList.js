@@ -19,6 +19,7 @@ function ProductList() {
   const discounts = discountLabel;
   const [description, setDescription] = useState("");
   const [usage, setUsage] = useState("");
+  const [stockQuantity, setStockQuantity] = useState("");
   const isFormValid = name.trim() !== "" && price !== "" && picture.trim() !== "";
 
   const [products, setProducts] = useState([]);
@@ -86,6 +87,7 @@ function ProductList() {
     setPicture("");
     setDescription("");
     setUsage("");
+    setStockQuantity("");
     setEditingId(null);
   };
 
@@ -108,6 +110,7 @@ function ProductList() {
         discounts,
         description,
         usage,
+        stockQuantity: stockQuantity ? parseInt(stockQuantity, 10) : 0,
       };
 
       if (editingId) {
@@ -139,6 +142,7 @@ function ProductList() {
     setPicture(product.picture || "");
     setDescription(product.description || "");
     setUsage(product.usage || "");
+    setStockQuantity(product.stockQuantity || 0);
   };
 
   const handleDelete = async (id) => {
@@ -292,6 +296,18 @@ function ProductList() {
                 </datalist>
               </div>
 
+              <div className="form-group">
+                <label htmlFor="ap-stockQuantity">Stock Quantity</label>
+                <input
+                  id="ap-stockQuantity"
+                  type="number"
+                  placeholder="e.g. 50"
+                  value={stockQuantity}
+                  onChange={(e) => setStockQuantity(e.target.value)}
+                  min="0"
+                />
+              </div>
+
               <div className="form-submit-row model-save-btn-outer-div">
                 <button type="submit" className="model-save-btn" disabled={!isFormValid}>
                   {editingId
@@ -330,6 +346,7 @@ function ProductList() {
                   <th>Discounts</th>
                   <th>Description</th>
                   <th>Usage</th>
+                  <th>Stock</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -368,6 +385,9 @@ function ProductList() {
                     <td data-label="Discounts">{product.discounts || "—"}</td>
                     <td data-label="Description" className="truncate-cell">{product.description || "—"}</td>
                     <td data-label="Usage" className="truncate-cell">{product.usage || "—"}</td>
+                    <td data-label="Stock">
+                      <span className="stock-qty-chip">{product.stockQuantity ?? 0}</span>
+                    </td>
                     <td data-label="Actions">
                       <div className="action-buttons">
                         <button className="edit-btn" onClick={() => startEdit(product)}>

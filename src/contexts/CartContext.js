@@ -19,18 +19,19 @@ export const CartProvider = ({ children }) => {
 
   // Add to Cart
   const addToCart = (product) => {
+    const qtyToAdd = product.quantity || 1;
     setCart((prev) => {
       const existingItem = prev.find((item) => item.id === product.id);
 
       if (existingItem) {
         return prev.map((item) =>
           item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + qtyToAdd }
             : item
         );
       }
 
-      return [...prev, { ...product, quantity: 1 }];
+      return [...prev, { ...product, quantity: qtyToAdd }];
     });
 
     setIsCartOpen(true);

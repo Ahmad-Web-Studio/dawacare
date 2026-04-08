@@ -3,7 +3,7 @@ import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import { Link } from "react-router-dom";
 import { db } from "../firebase/firebase";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { useCart } from "../contexts/CartContext";
 import { useSale } from "../contexts/SaleContext";
 
@@ -20,24 +20,19 @@ const Products = () => {
   };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const productsRef = collection(db, "products");
-        const q = query(productsRef, orderBy("createdAt", "desc"));
-        const querySnapshot = await getDocs(q);
+    const productsRef = collection(db, "products");
+    const q = query(productsRef, orderBy("createdAt", "desc"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const productsData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setProducts(productsData);
+    }, (error) => {
+      console.error("Error fetching products:", error);
+    });
 
-        const productsData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setProducts(productsData);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -89,16 +84,22 @@ const Products = () => {
                     )}
                   </div>
 
-                  <button
-                    className="add-to-cart-btn"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const discountedPrice = getDiscountedPrice(product.retailPrice);
-                      addToCart({ ...product, price: discountedPrice ?? product.price });
-                    }}
-                  >
-                    Add To Cart
-                  </button>
+                  {product.isOutOfStock ? (
+                    <button className="add-to-cart-btn add-to-cart-btn--oos" disabled>
+                      Out of Stock
+                    </button>
+                  ) : (
+                    <button
+                      className="add-to-cart-btn"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const discountedPrice = getDiscountedPrice(product.retailPrice);
+                        addToCart({ ...product, price: discountedPrice ?? product.price });
+                      }}
+                    >
+                      Add To Cart
+                    </button>
+                  )}
                 </div>
               </div>
             </Link>

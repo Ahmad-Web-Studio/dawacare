@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, deleteDoc, getDoc, increment } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import "./AdminPanel.css";
 
@@ -50,7 +50,32 @@ const Orders = () => {
   // ── Update status in Firestore + local state ─────────────────
   const handleStatusChange = async (docId, newStatus) => {
     try {
-      await updateDoc(doc(db, "orders", docId), { status: newStatus });
+      const orderRef = doc(db, "orders", docId);
+      const prevOrder = orders.find((o) => o.docId === docId);
+      const prevStatus = prevOrder?.status;
+
+      await updateDoc(orderRef, { status: newStatus });
+
+      // Auto-reduce stockQuantity when order is confirmed (Processing)
+      // Triggered when status changes from Pending to Processing
+      if (newStatus === "Processing" && prevStatus === "Pending") {
+        const items = prevOrder?.items ?? [];
+        await Promise.all(
+          items.map(async (item) => {
+            if (!item.id) return;
+            const productRef = doc(db, "products", item.id);
+            const productSnap = await getDoc(productRef);
+            if (!productSnap.exists()) return;
+            const currentQty = productSnap.data().stockQuantity;
+            // Only decrement if stockQuantity field exists and is > 0
+            if (typeof currentQty === "number" && currentQty > 0) {
+              const deduct = Math.min(item.quantity ?? 1, currentQty);
+              await updateDoc(productRef, { stockQuantity: increment(-deduct) });
+            }
+          })
+        );
+      }
+
       setOrders((prev) =>
         prev.map((o) => (o.docId === docId ? { ...o, status: newStatus } : o))
       );

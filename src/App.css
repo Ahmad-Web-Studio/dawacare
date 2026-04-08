@@ -380,6 +380,16 @@ header {
     font-size: 13px;
     padding: 0 20px;
   }
+  .marquee-discount {
+    font-size: 13px;
+  }
+  .marquee-dates {
+    font-size: 12px;
+  }
+
+  .marquee-sep {
+    font-size: 10px;
+  }
 }
 
 /* Category Navigation (legacy, kept for reference) */
@@ -1039,66 +1049,6 @@ header {
   width: 33.18px;
 }
 
-/* Feature banner */
-
-.features-bar {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  padding: 40px 0;
-  background-color: #fff;
-}
-
-.features-container {
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 130px;
-}
-
-.feature-item {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  gap: 15px;
-  flex: 1;
-  /* Ensures all items take equal width */
-}
-
-.feature-icon {
-  background-color: #d2222d;
-  /* The red color from your design */
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  /* Prevents the circle from squishing */
-}
-
-.feature-icon img {
-  width: 24px;
-  /* Adjust based on your icon size */
-  height: 24px;
-  filter: brightness(0) invert(1);
-  /* Makes black icons white if using PNGs */
-}
-
-.feature-text h3 {
-  font-size: 16.02px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin: 0;
-}
-
-.feature-text p {
-  font-size: 12.46px;
-  color: #666;
-  margin: 4px 0 0 0;
-}
-
 /* today best deal section */
 .product-swiper {
   width: 100%;
@@ -1115,7 +1065,7 @@ header {
 /* --- Features Bar Styles --- */
 .features-bar {
   width: 100%;
-  padding: 30px 0;
+  padding: 40px 0;
   background: #fff;
 }
 
@@ -1130,6 +1080,7 @@ header {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 0px 40px;
 }
 
 .feature-icon {
@@ -1144,13 +1095,13 @@ header {
 }
 
 .feature-text h3 {
-  font-size: 15px;
+  font-size: 13px;
   margin: 0;
   font-weight: 600;
 }
 
 .feature-text p {
-  font-size: 13px;
+  font-size: 11px;
   color: #777;
   margin: 0;
 }
@@ -1203,22 +1154,27 @@ header {
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   align-items: start;
+  margin-bottom: 30px;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 960px) {
   .products-grid {
-    gap: 24px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 600px) {
   .products-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 12px;
   }
 
   .card-image-box {
-    height: 150px;
+    height: 200px; /* Taller image for single column */
+  }
+  .feature-item {
+    padding: 0px;
   }
 }
 
@@ -2886,8 +2842,10 @@ O .store-link a {
 /*PRODUCT DETAILED VIEW  */
 .product-detail-container {
   display: flex;
-  gap: 60px;
+  gap: 20px;
   align-items: flex-start;
+  margin: 100px auto;
+  max-width: 100%;
 }
 
 /* LEFT IMAGE SECTION */
@@ -3243,7 +3201,7 @@ O .store-link a {
   align-items: center;
   justify-content: space-between;
   gap: 48px;
-  padding: 90px 60px 56px;
+  padding: 90px 10px 56px;
   background: linear-gradient(135deg, #fff 55%, #fff5f5 100%);
   position: relative;
   overflow: hidden;
@@ -3347,7 +3305,7 @@ O .store-link a {
 
 /* ── Shared section wrapper ── */
 .about-section {
-  padding: 68px 60px;
+  padding: 68px 10px;
 }
 .about-section-tag {
   display: inline-flex;
@@ -3704,5 +3662,129 @@ O .store-link a {
   }
   .about-accent-circle i {
     font-size: 32px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   OUT-OF-STOCK — USER PANEL STYLES
+═══════════════════════════════════════════════════════ */
+
+/* Red pill badge overlaid on the product card image */
+.oos-overlay-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 5;
+  background: #c90f2f;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(201, 15, 47, 0.35);
+}
+
+/* Disabled "Out of Stock" text button (replaces "Add To Cart") */
+.add-to-cart-btn.add-to-cart-btn--oos {
+  background: #f0f0f0 !important;
+  color: #999 !important;
+  cursor: not-allowed !important;
+  border: 1.5px solid #e0e0e0 !important;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  opacity: 1 !important;
+}
+
+.add-to-cart-btn.add-to-cart-btn--oos:hover {
+  background: #f0f0f0 !important;
+  transform: none !important;
+}
+
+/* Disabled cart icon button (used on card hover — FeatureProducts / Productslider) */
+.add-cart-btn.add-cart-btn--oos {
+  background: rgba(0, 0, 0, 0.35) !important;
+  cursor: not-allowed !important;
+  opacity: 0.7;
+}
+
+.add-cart-btn.add-cart-btn--oos:hover {
+  background: rgba(0, 0, 0, 0.35) !important;
+  transform: none !important;
+}
+
+/* Product Detail View — out-of-stock banner */
+.product-oos-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #fff3f4;
+  border: 1.5px solid #f5c0c8;
+  border-left: 4px solid #c90f2f;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #5a0a1a;
+  line-height: 1.55;
+}
+
+.product-oos-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+/* ═ Product Detail View Responsiveness ═ */
+@media (max-width: 1024px) {
+  .product-detail-container {
+    gap: 20px;
+    margin: 80px auto;
+  }
+  .product-detail-right {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 992px) {
+  .product-detail-left img {
+    height: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-detail-container {
+    flex-direction: column;
+    gap: 20px;
+    margin: 60px auto;
+  }
+  .product-detail-left,
+  .product-detail-right {
+    width: 100%;
+    flex: none;
+  }
+  .product-detail-left img {
+    height: auto;
+    max-height: 300px;
+  }
+  .product-detail-right h1 {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-detail-container {
+    margin: 40px auto;
+  }
+  .product-detail-right {
+    padding: 20px;
+  }
+  .product-detail-right h1 {
+    font-size: 22px;
+  }
+  .price {
+    font-size: 22px;
   }
 }

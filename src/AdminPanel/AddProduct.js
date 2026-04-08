@@ -38,6 +38,7 @@ function AddProduct() {
   const [picture, setPicture] = useState("");
   const [description, setDescription] = useState("");
   const [usage, setUsage] = useState("");
+  const [stockQuantity, setStockQuantity] = useState("");
   const [loading, setLoading] = useState(false);
 
   const isFormValid = name.trim() !== "" && price !== "" && picture.trim() !== "";
@@ -56,6 +57,7 @@ function AddProduct() {
     setPicture("");
     setDescription("");
     setUsage("");
+    setStockQuantity("");
   };
 
   const handleSubmit = async (e) => {
@@ -78,6 +80,7 @@ function AddProduct() {
         discounts,
         description,
         usage,
+        stockQuantity: stockQuantity ? parseInt(stockQuantity, 10) : 0,
         createdAt: new Date()
       });
       toast.success("Product added successfully");
@@ -217,6 +220,19 @@ function AddProduct() {
             <datalist id="ap-usageOptions">
               {usageOptions.map((u, i) => <option key={i} value={u} />)}
             </datalist>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="ap-stockQuantity">Stock Quantity *</label>
+            <input
+              id="ap-stockQuantity"
+              type="number"
+              value={stockQuantity}
+              onChange={(e) => setStockQuantity(e.target.value)}
+              placeholder="Initial stock count (e.g. 50)"
+              min="0"
+              required
+            />
           </div>
 
           <div className="form-submit-row add-product-btn-outer-div">
