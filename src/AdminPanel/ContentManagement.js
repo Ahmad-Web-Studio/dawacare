@@ -16,6 +16,15 @@ function ContentManagement() {
   const [contact, setContact] = useState(DEFAULT_SITE_INFO.contact);
   const [saving, setSaving] = useState(false);
 
+  const isFormValid =
+    (logoURL?.trim() || "") !== "" &&
+    (footerLogoURL?.trim() || "") !== "" &&
+    (contact.phone1?.trim() || "") !== "" &&
+    slides.every(s =>
+      (s.heroTitle?.trim() || "") !== "" &&
+      (s.heroImageURL?.trim() || "") !== ""
+    );
+
   // Sync local state only once when Firestore data first loads
   useEffect(() => {
     if (!loading) {
@@ -24,7 +33,7 @@ function ContentManagement() {
       setSlides(siteInfo.slides);
       setContact(siteInfo.contact);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   const updateSlide = (index, field, value) => {
@@ -341,7 +350,7 @@ function ContentManagement() {
 
         {/* ── Save Button ── */}
         <form className="upload-form" style={{ marginTop: "28px" }} onSubmit={handleSave}>
-          <button type="submit" disabled={saving}>
+          <button type="submit" disabled={saving || !isFormValid}>
             {saving
               ? <><i className="fa-solid fa-spinner fa-spin"></i> Saving...</>
               : <><i className="fa-solid fa-floppy-disk"></i> Save Changes</>

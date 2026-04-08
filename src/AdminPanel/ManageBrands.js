@@ -12,6 +12,9 @@ function ManageBrands() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState(EMPTY_MODAL);
 
+  const isAllBrandsValid = localBrands.every(b => b.name.trim() !== "" && b.logoUrl.trim() !== "");
+  const isModalValid = modalData.name.trim() !== "" && modalData.logoUrl.trim() !== "";
+
   useEffect(() => {
     if (!loading) {
       setLocalBrands(brands);
@@ -251,7 +254,7 @@ function ManageBrands() {
         </div>
 
         <form className="upload-form" onSubmit={handleSave}>
-          <button type="submit" disabled={saving}>
+          <button type="submit" disabled={saving || !isAllBrandsValid}>
             {saving
               ? <><i className="fa-solid fa-spinner fa-spin"></i> Saving...</>
               : <><i className="fa-solid fa-floppy-disk"></i> Save Changes</>
@@ -356,6 +359,7 @@ function ManageBrands() {
               <button
                 type="button"
                 onClick={handleModalSave}
+                disabled={!isModalValid}
                 style={{
                   background: "#d2222d",
                   border: "none",

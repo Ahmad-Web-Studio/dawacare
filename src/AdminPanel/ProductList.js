@@ -19,6 +19,7 @@ function ProductList() {
   const discounts = discountLabel;
   const [description, setDescription] = useState("");
   const [usage, setUsage] = useState("");
+  const isFormValid = name.trim() !== "" && price !== "" && picture.trim() !== "";
 
   const [products, setProducts] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -292,7 +293,7 @@ function ProductList() {
               </div>
 
               <div className="form-submit-row model-save-btn-outer-div">
-                <button type="submit" className="model-save-btn">
+                <button type="submit" className="model-save-btn" disabled={!isFormValid}>
                   {editingId
                     ? <><i className="fa-solid fa-floppy-disk"></i> Save Changes</>
                     : <><i className="fa-solid fa-cloud-arrow-up"></i> Upload Product</>

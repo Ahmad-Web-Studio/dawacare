@@ -15,6 +15,15 @@ function ManageSale() {
   const [endDate, setEndDate] = useState("");
   const [saving, setSaving] = useState(false);
 
+  const isFormValid = !isActive || (
+    discountPercent > 0 &&
+    discountPercent <= 100 &&
+    label.trim() !== "" &&
+    startDate !== "" &&
+    endDate !== "" &&
+    startDate <= endDate
+  );
+
   useEffect(() => {
     if (!saleLoading) {
       setIsActive(sale.isActive || false);
@@ -254,7 +263,7 @@ function ManageSale() {
           </div>
 
           <div className="form-submit-row save-sale-btn-outer-div">
-            <button type="submit" disabled={saving} className="save-sale-btn">
+            <button type="submit" disabled={saving || !isFormValid} className="save-sale-btn">
               {saving
                 ? <><i className="fa-solid fa-spinner fa-spin"></i> Saving...</>
                 : <><i className="fa-solid fa-floppy-disk"></i> Save Sale Settings</>

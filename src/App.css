@@ -91,6 +91,14 @@ body {
   transition: all 0.3s ease;
 }
 
+button:disabled,
+.btn:disabled {
+  background-color: rgb(145, 144, 144) !important;
+  color: #4a4949 !important;
+  cursor: not-allowed !important;
+  opacity: 0.8;
+}
+
 .btn-danger {
   background-color: #d2222d;
   color: white;
@@ -3213,6 +3221,7 @@ O .store-link a {
 .complete-order-btn:hover {
   background: #b71c1c;
 }
+/* Global disabled style in base styles handles this */
 
 .checkout-left input::placeholder,
 .checkout-left textarea::placeholder {

@@ -43,7 +43,19 @@ const CheckoutPage = () => {
     ? cartItems.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 0), 0)
     : 0;
 
-  const grandTotal = itemsTotal + shippingRate;
+  const currentShippingRate = cartItems.length > 0 ? shippingRate : 0;
+  const grandTotal = itemsTotal + currentShippingRate;
+
+  // Validation logic
+  const isFormValid =
+    formData.firstName.trim() !== "" &&
+    formData.lastName.trim() !== "" &&
+    formData.email.trim() !== "" &&
+    formData.phone.trim() !== "" &&
+    formData.street.trim() !== "" &&
+    formData.region.trim() !== "" &&
+    formData.city.trim() !== "" &&
+    formData.postalCode.trim() !== "";
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -164,10 +176,10 @@ const CheckoutPage = () => {
 
           <h2>Order Summary</h2>
           <p>Subtotal: Rs. {itemsTotal}</p>
-          <p>Shipping: Rs. {shippingRate}</p>
+          <p>Shipping: Rs. {currentShippingRate}</p>
           <h3>Total: Rs. {grandTotal}</h3>
 
-          <button type="submit" className="complete-order-btn">Complete Order</button>
+          <button type="submit" className="complete-order-btn" disabled={cartItems.length === 0 || !isFormValid}>Complete Order</button>
         </div>
 
       </form>
