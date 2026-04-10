@@ -113,10 +113,29 @@ function ManageBrands() {
           Add or remove featured brands shown in the carousel on the home page. Changes are reflected immediately after saving.
         </p>
 
-        <h3 style={{ marginBottom: "16px", color: "#d2222d", borderBottom: "2px solid #d2222d", paddingBottom: "6px" }}>
-          <i className="fa-solid fa-tags" style={{ marginRight: "8px" }}></i>
-          Featured Brands
-        </h3>
+        <div style={{ maxWidth: "80%", width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", borderBottom: "2px solid #d2222d", paddingBottom: "6px" }}>
+          <h3 style={{ margin: 0, color: "#d2222d" }}>
+            <i className="fa-solid fa-tags" style={{ marginRight: "8px" }}></i>
+            Featured Brands
+          </h3>
+          <button
+            type="button"
+            onClick={openModal}
+            style={{
+              background: "#fff",
+              border: "2px dashed #d2222d",
+              borderRadius: "10px",
+              padding: "6px 16px",
+              cursor: "pointer",
+              color: "#d2222d",
+              fontWeight: "600",
+              fontSize: "13px",
+            }}
+          >
+            <i className="fa-solid fa-plus" style={{ marginRight: "6px" }}></i>
+            Add Brand
+          </button>
+        </div>
 
         {localBrands.length === 0 && (
           <div style={{ border: "1px dashed #e0e0e0", borderRadius: "10px", padding: "24px", textAlign: "center", color: "#aaa", marginBottom: "20px" }}>
@@ -134,6 +153,7 @@ function ManageBrands() {
               padding: "20px",
               marginBottom: "16px",
               background: "#fafafa",
+              maxWidth: "80%", width: "100%",
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
@@ -192,25 +212,28 @@ function ManageBrands() {
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", alignItems: "start" }}>
-              <div className="form-group" style={{ margin: 0 }}>
+            <div style={{ maxWidth: "50%", width: "100%", display: "flex", flexDirection: "column", gap: "16px", alignItems: "start" }}>
+              <div className="form-group" style={{ margin: 0, width: "100%" }}>
                 <label>Brand Name</label>
                 <input
                   type="text"
                   value={brand.name}
                   onChange={(e) => handleChange(index, "name", e.target.value)}
                   placeholder="e.g. Pfizer"
+                  style={{ width: "100%" }}
                 />
               </div>
 
-              <CloudinaryUpload
-                id={`mb-logo-${brand.id}`}
-                label="Brand Logo"
-                required
-                value={brand.logoUrl}
-                onChange={(url) => handleChange(index, "logoUrl", url)}
-                previewShape="circle"
-              />
+              <div style={{ width: "100%" }}>
+                <CloudinaryUpload
+                  id={`mb-logo-${brand.id}`}
+                  label="Brand Logo"
+                  required
+                  value={brand.logoUrl}
+                  onChange={(url) => handleChange(index, "logoUrl", url)}
+                  previewShape="circle"
+                />
+              </div>
             </div>
           </div>
         ))}
@@ -285,7 +308,7 @@ function ManageBrands() {
               </button>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", alignItems: "start" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               <div className="form-group" style={{ margin: 0 }}>
                 <label>Brand Name <span style={{ color: "#d2222d" }}>*</span></label>
                 <input
@@ -294,6 +317,7 @@ function ManageBrands() {
                   onChange={(e) => setModalData((d) => ({ ...d, name: e.target.value }))}
                   placeholder="e.g. Pfizer"
                   autoFocus
+                  style={{ width: "100%" }}
                 />
               </div>
 
